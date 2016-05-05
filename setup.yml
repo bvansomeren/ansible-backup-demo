@@ -1,0 +1,20 @@
+---
+
+- hosts: backup-server
+  become: yes
+  become_user: root
+  roles:
+    - bvansomeren.backup-server
+  vars:
+    backup_accounts:
+      192.168.33.12:
+        username: "test_example"
+        target_folder: "~/stuff/"
+        customer: "customer1"
+
+
+- hosts: backup-client
+  become: yes
+  become_user: root
+  roles:
+    - { role: bvansomeren.backup, backup_username: "test_example", backup_pubkey: "{{ lookup('file', '/tmp/stuff/backup-server/keys/test_example_id_rsa.pub') }}" }
